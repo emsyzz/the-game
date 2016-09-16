@@ -1,28 +1,19 @@
 package lv.autentica;
 
 import lv.autentica.game.GameRules;
-import lv.autentica.models.Player;
+import lv.autentica.models.GameRound;
 import lv.autentica.models.Team;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class Game
 {
 
     private List<Team> teams = new ArrayList<>();
 
-    private List<GameResult> results;
+    private List<GameRound> results;
 
     private GameRules rules;
-
-    public Game(/*List<String> teams, List<HashMap<String, Object>> players*/) {
-        /*this.teams = teams;
-        this.players = players;
-        for (String team : teams) {
-            results.put(team, 0);
-        }*/
-    }
 
     public Game(GameRules rules) {
         this.rules = rules;
@@ -40,34 +31,54 @@ public class Game
         return this.teams;
     }
 
-    public void printTeamInfo() {
-        /*System.out.println("=== Teams info ===");
-        for (Team team: teams) {
-            System.out.println("== Info for team: " + team + " (" + getAverageTeamOverall(team) + ")");
-            //noinspection Convert2streamapi
-            for (Player player: team.getPlayers()) {
-                System.out.println("  " + player.getFullName() + " (" + player.getOverall() + ")");
+    public List<GameRound> getResults()
+    {
+        return this.results;
+    }
+
+    private static void setTeamResultMap(Map<String, Integer> map, Team team, Integer score)
+    {
+        if (null != map.putIfAbsent(team.getName(), score)) {
+            map.replace(team.getName(), map.get(team.getName()) + score);
+        }
+    }
+
+    public Map<String, Integer> getTeamsWithTotalWins()
+    {
+        Map<String, Integer> winMap = new HashMap<>();
+
+        if (this.results.size() > 0) {
+            for (GameRound round: this.results) {
+                setTeamResultMap(winMap, round.getTeamA(), 0);
+                setTeamResultMap(winMap, round.getTeamB(), 0);
+                if (round.getTeamAScore() > round.getTeamBScore()) {
+                    setTeamResultMap(winMap, round.getTeamA(), 1);
+                } else if (round.getTeamAScore() < round.getTeamBScore()) {
+                    setTeamResultMap(winMap, round.getTeamB(), 1);
+                }
             }
-        }*/
+        }
+
+        return winMap;
+    }
+
+    public Map<String, Integer> getTeamsWithTotalScore()
+    {
+        Map<String, Integer> scoreMap = new HashMap<>();
+
+        if (this.results.size() > 0) {
+            for (GameRound round: this.results) {
+                setTeamResultMap(scoreMap, round.getTeamA(), round.getTeamAScore());
+                setTeamResultMap(scoreMap, round.getTeamB(), round.getTeamBScore());
+            }
+        }
+
+        return scoreMap;
     }
 
     public void play()
     {
         this.results = this.rules.getGameResults(this.teams);
     }
-
-    /*public void printResults() {
-        Comparator<Map.Entry<String, Integer>> valueComparator = (e1, e2) -> e2.getValue().compareTo(e1.getValue());
-        Map<String, Integer> sortedResults = results.entrySet().stream().
-                                             sorted(valueComparator).
-                                             collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                                                            (e1, e2) -> e1, LinkedHashMap::new));
-
-        System.out.println("=== Result table ===");
-        for (Map.Entry<String, Integer> result : sortedResults.entrySet()) {
-            System.out.println(result.getKey() + ": " + result.getValue());
-        }
-    }*/
-
 
 }

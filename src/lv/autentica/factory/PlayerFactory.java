@@ -10,7 +10,7 @@ public class PlayerFactory
 {
 
     private static final String[] PLAYER_FIRST_NAMES =
-            new String[] { "Rīgas", "Liepājas", "Daugavpils", "Jelgavas", "Saulkrastu", "Ventspils", "Valmieras" };
+            new String[] { "Juris", "Janis", "Ilja", "Arturs", "Toms", "Ivars", "Sandis" };
 
     private static final String[] PLAYER_LAST_NAMES =
             new String[] { "Abols", "Zirnis", "Kalns", "Semjonovs", "Rumba", "Vagars", "Poga" };
@@ -22,7 +22,8 @@ public class PlayerFactory
         while (playerCount > 0) {
             Player player = new Player(
                 RandomUtil.getRandomStringFromArray(PLAYER_FIRST_NAMES),
-                RandomUtil.getRandomStringFromArray(PLAYER_LAST_NAMES)
+                RandomUtil.getRandomStringFromArray(PLAYER_LAST_NAMES),
+                RandomUtil.randInt(60, 100)
             );
             players.add(player);
             playerCount--;

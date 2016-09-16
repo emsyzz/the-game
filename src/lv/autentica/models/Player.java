@@ -8,18 +8,11 @@ public class Player
 
     private float overall;
 
-    public Player(String firstName, String lastName)
-    {
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setOverall(0);
-    }
-
     public Player(String firstName, String lastName, float overall)
     {
-        this.setFirstName(firstName);
-        this.setLastName(lastName);
-        this.setOverall(overall);
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.overall = overall;
     }
 
     public String getFirstName()

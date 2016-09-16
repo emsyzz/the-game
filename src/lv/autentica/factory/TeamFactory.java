@@ -16,23 +16,38 @@ public class TeamFactory
 
     private static String getRandomUniqueTeamName(List<String> teamNames)
     {
-        StringBuilder sb = new StringBuilder();
+        List<String[]> strings = new ArrayList<>();
+        strings.add(TEAM_NAMES_1);
+        strings.add(TEAM_NAMES_2);
+        String outName = "";
+        int foundIndex = -1;
 
-        while (teamNames.indexOf(sb.toString()) < 0) {
-            sb.setLength(0);
-            sb.append(RandomUtil.getRandomStringFromArray(TEAM_NAMES_1));
-            sb.append(" "); // add whitespace to separate
-            sb.append(RandomUtil.getRandomStringFromArray(TEAM_NAMES_2));
+        while (outName.equals("") || foundIndex >= 0) {
+            outName = RandomUtil.concatenateRandomStrings(strings);
+            foundIndex = teamNames.indexOf(outName);
+            if (foundIndex < 0) {
+                teamNames.add(outName);
+            }
         }
 
-        return sb.toString();
+        return outName;
+    }
+
+    public static int getMaxTeams()
+    {
+        return TEAM_NAMES_1.length * TEAM_NAMES_2.length;
+    }
+
+    public static boolean isEnoughNamesForTeams(int teamCount)
+    {
+        return teamCount <= getMaxTeams();
     }
 
     public static List<Team> generateRandomTeams(int teamCount)
     {
-        List<Team> teams = new ArrayList<>();
+        List<Team> teams = new ArrayList<>(teamCount);
 
-        List<String> usedTeamNames = new ArrayList<>();
+        List<String> usedTeamNames = new ArrayList<>(teamCount);
 
         String teamName;
 
@@ -43,7 +58,6 @@ public class TeamFactory
             teamName = getRandomUniqueTeamName(usedTeamNames);
             team.setName(teamName);
             teams.add(team);
-            usedTeamNames.add(teamName);
             teamCount--;
         }
 
