@@ -1,14 +1,11 @@
 package lv.autentica.output;
 
 import lv.autentica.Game;
-import lv.autentica.models.GameRound;
-import lv.autentica.models.Player;
-import lv.autentica.models.Team;
+import lv.autentica.models.*;
+import lv.autentica.util.SortingUtil;
 
-import java.util.Comparator;
-import java.util.LinkedHashMap;
+import java.text.DecimalFormat;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 public class GameDescriptor
 {
@@ -21,12 +18,14 @@ public class GameDescriptor
 
     private static String getTeamTitle(Team team)
     {
-        return team.getName() + " (Avg: " + team.getOverallAverage() + ")";
+        DecimalFormat df = new DecimalFormat("#.#");
+        String teamAvg = df.format(team.getOverallAverage());
+        return team.getName() + " (Avg: " + teamAvg + ")";
     }
 
     private static String getPlayerTitle(Player player)
     {
-        return player.getFullName() + " (Avg: " + player.getOverall() + ")";
+        return player.getFullName() + " (" + player.getOverall() + ")";
     }
 
     public void describeTeams()
@@ -56,14 +55,6 @@ public class GameDescriptor
         System.out.println("=== Game over ===\n");
     }
 
-    private static Map<String, Integer> getSortedMap(Map<String, Integer> map)
-    {
-        Comparator<Map.Entry<String, Integer>> valueComparator = (e1, e2) -> e2.getValue().compareTo(e1.getValue());
-        return map.entrySet().stream().sorted(valueComparator)
-                .collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue,
-                                (e1, e2) -> e1, LinkedHashMap::new));
-    }
-
     private static void displayMap(Map<String, Integer> map)
     {
         for (Map.Entry<String, Integer> result : map.entrySet()) {
@@ -80,7 +71,7 @@ public class GameDescriptor
 
     public void describeResultsByScore()
     {
-        Map<String, Integer> sortedResults = getSortedMap(this.game.getTeamsWithTotalScore());
+        Map<String, Integer> sortedResults = SortingUtil.sortHashMap(this.game.getTeamsWithTotalScore());
 
         System.out.println("=== Result table (score) ===");
         displayMap(sortedResults);
@@ -88,7 +79,7 @@ public class GameDescriptor
 
     public void describeResultsByWins()
     {
-        Map<String, Integer> sortedResults = getSortedMap(this.game.getTeamsWithTotalWins());
+        Map<String, Integer> sortedResults = SortingUtil.sortHashMap(this.game.getTeamsWithTotalWins());
 
         System.out.println("=== Result table (wins) ===");
         displayMap(sortedResults);

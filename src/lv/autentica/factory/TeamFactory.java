@@ -2,6 +2,7 @@ package lv.autentica.factory;
 
 import java.util.*;
 
+import lv.autentica.models.Player;
 import lv.autentica.models.Team;
 import lv.autentica.util.RandomUtil;
 
@@ -59,6 +60,23 @@ public class TeamFactory
             team.setName(teamName);
             teams.add(team);
             teamCount--;
+        }
+
+        return teams;
+    }
+
+    public static List<Team> generateRandomTeamsWithPlayers(int teamCount, int playersInTeam)
+    {
+        List<Team> teams = generateRandomTeams(teamCount);
+
+        for (Team team : teams) {
+
+            List<Player> players = PlayerFactory.generateRandomPlayers(playersInTeam);
+
+            //noinspection Convert2streamapi
+            for (Player player : players) {
+                team.addPlayer(player);
+            }
         }
 
         return teams;

@@ -21,19 +21,9 @@ public class GameRound
         return teamA;
     }
 
-    public void setTeamA(Team teamA)
-    {
-        this.teamA = teamA;
-    }
-
     public Team getTeamB()
     {
         return teamB;
-    }
-
-    public void setTeamB(Team teamB)
-    {
-        this.teamB = teamB;
     }
 
     public Integer getTeamAScore()
